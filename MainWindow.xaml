@@ -1,0 +1,21 @@
+﻿<Window x:Class="A4_MotherBoard_Tester_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:A4_MotherBoard_Tester_WPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1000" Loaded="Window_Loaded">
+    <Viewbox Stretch="Fill">
+        <Canvas Height="800" Width="1000">
+            <TextBox x:Name="txt_ReadBackMessage" Canvas.Left="10" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="204" Height="148" Width="390" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox x:Name="txt_FtdiFeedBackMessage" Canvas.Left="10" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="34" HorizontalAlignment="Center" VerticalAlignment="Top" Width="390" Height="143"/>
+            <Button x:Name="btn_BuzzerOn" Content="Buzzer ON" Canvas.Left="806" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Center" Width="72" Click="btn_BuzzerOn_Click"/>
+            <Button x:Name="btn_BuzzerOff" Content="Buzzer OFF" Canvas.Left="890" Canvas.Top="58" Width="72" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btn_BuzzerOff_Click"/>
+            <GroupBox Height="55" Header="Buzzer" Width="195" Canvas.Left="785" Canvas.Top="34" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button x:Name="btn_SINGLE_READ" Content="SINGLE READ" Canvas.Left="450" Canvas.Top="68" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Click="btn_SINGLE_READ_Click"/>
+
+        </Canvas>
+    </Viewbox>
+
+</Window>
