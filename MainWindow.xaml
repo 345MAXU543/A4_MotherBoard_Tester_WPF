@@ -14,6 +14,11 @@
             <Button x:Name="btn_BuzzerOff" Content="Buzzer OFF" Canvas.Left="890" Canvas.Top="58" Width="72" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btn_BuzzerOff_Click"/>
             <GroupBox Height="55" Header="Buzzer" Width="195" Canvas.Left="785" Canvas.Top="34" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <Button x:Name="btn_SINGLE_READ" Content="SINGLE READ" Canvas.Left="450" Canvas.Top="68" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Click="btn_SINGLE_READ_Click"/>
+            <Button x:Name="btn_PageWrite" Content="PageWrite" Canvas.Left="484" Canvas.Top="297" HorizontalAlignment="Left" VerticalAlignment="Center" Width="95" Click="btn_PageWrite_Click"/>
+            <Button x:Name="btn_PageRead" Content="PageRead" Canvas.Left="585" Canvas.Top="297" HorizontalAlignment="Left" VerticalAlignment="Center" Width="95" Click="btn_PageRead_Click"/>
+            <TextBox x:Name="txt_PageReadResult" Canvas.Left="585" TextWrapping="Wrap" Text="TextBox" Canvas.Top="321" Width="326" HorizontalAlignment="Left" Height="112" VerticalAlignment="Center"/>
+            <Button x:Name="btn_BusyCheck" Content="Busy?" Canvas.Left="521" Canvas.Top="204" Width="95" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btn_BusyCheck_Click"/>
+            <Label x:Name="lb_BusyCheckRes" Content="Not busy !!!" Background="#FF02F502" Canvas.Left="640" Canvas.Top="204"/>
 
         </Canvas>
     </Viewbox>

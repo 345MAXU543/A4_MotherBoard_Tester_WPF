@@ -1,7 +1,9 @@
 ﻿using FTD2XX_NET;
 using System;
+using System.Net;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 
 namespace A4_MotherBoard_Tester_WPF
 {
@@ -108,7 +110,7 @@ namespace A4_MotherBoard_Tester_WPF
             }
         }
 
-        private void fn_Ftdi_Write(byte command, uint DATA)
+        private void fn_Ftdi_Write(byte command, ulong DATA)
         {
             byte[] Send = new byte[6];
             Send[0] = (byte)(((DATA >> 28) & 0x7F) | 0x80); // 取 bit 31~28（4 位）
@@ -184,7 +186,7 @@ namespace A4_MotherBoard_Tester_WPF
             }
 
             returnData = 0;
-            address = 0;           
+            address = 0;
 
             byte[] afterTransfer = new byte[4];
             byte high, low;
@@ -221,6 +223,10 @@ namespace A4_MotherBoard_Tester_WPF
 
         }
 
+        /// <summary>
+        /// 0 : OK , 1 : Busy , 2 : ERR , 3 : Other Error
+        /// </summary>
+        /// <returns></returns>
         private int fn_Ftdi_IsBusy()
         {
             fn_Ftdi_Write(0x00, 0x09);
@@ -242,6 +248,35 @@ namespace A4_MotherBoard_Tester_WPF
             {
                 return 3;
             }
+
+            #region UI
+
+            if (Data == 64)
+            {
+                lb_BusyCheckRes.Background
+                    = (System.Windows.Media.Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#FF02F502");
+                lb_BusyCheckRes.Content = "Not busy !!!";
+            }
+            else if (Data == 65)
+            {
+                lb_BusyCheckRes.Background
+                    = System.Windows.Media.Brushes.Yellow;
+                lb_BusyCheckRes.Content = "Busy !!!";
+            }
+            else if (Data == 66)
+            {
+                lb_BusyCheckRes.Background
+                    = System.Windows.Media.Brushes.Red;
+                lb_BusyCheckRes.Content = "Error !!!";
+            }
+            else
+            {
+                lb_BusyCheckRes.Background
+                    = System.Windows.Media.Brushes.Gray;
+                lb_BusyCheckRes.Content = "Unknown status !!!";
+            }
+
+            #endregion
         }
 
 
@@ -270,15 +305,111 @@ namespace A4_MotherBoard_Tester_WPF
                 + ", 資料: " + dataBinary);
         }
 
-        private void fn_Ftdi_PageRead()
-        {
 
+        /// <summary>
+        /// PageRead 函數
+        /// </summary>
+        /// <param name="ID">
+        ///ID = 1 : 不使用
+        ///ID = 2 : 主機板
+        ///ID = 3 : 不使用
+        ///ID = 4 : 晶片鎖 ENC#1 EEPROM 24LC64
+        ///ID = 5 : 晶片鎖 ENC#2 EEPROM 24LC64
+        ///ID = 6 : 晶片鎖 LC#1 EEPROM 24LC64
+        ///ID = 7 : 晶片鎖 LC#2 EEPROM 24LC64</param>
+        /// <param name="ReadSize">ReadSize 只能是 8, 16, 32, 64</param>
+        /// <param name="StartAddress">開始讀取的記憶體位置</param>
+        /// <param name="PageData">Feed back data (OUTPUT)</param>
+        /// <param name="PageAddress">Address of the feed back data (OUTPUT)</param>
+        private void fn_Ftdi_PageRead(uint ID, uint ReadSize, uint StartAddress, uint PROM_READ, out uint PageData, out byte PageAddress)
+        {
+            if (ReadSize == 8 || ReadSize == 0) ReadSize = 0;
+            else if (ReadSize == 16 || ReadSize == 1) ReadSize = 1;
+            else if (ReadSize == 32 || ReadSize == 2) ReadSize = 2;
+            else if (ReadSize == 64 || ReadSize == 3) ReadSize = 3;
+            else if (ReadSize == 128 || ReadSize == 4) ReadSize = 4;
+            else MessageBox.Show("ReadSize 只能是 8, 16, 32, 64");
+
+
+            //0x0230000 ->  ID = 2  , 3 = 64byte讀取資料大小, 從0000開始讀取
+            //uint Address = 0x0230000;
+
+            uint Address = StartAddress;
+            Address = ID * 0x100000 + Address;
+            Address = ReadSize * 0x10000 + Address;
+            Address = fn_SetBitToOne(Address, 23);
+
+            if (fn_Ftdi_IsBusy() == 0)
+            {
+                fn_Ftdi_Write(0x09, Address); //PROM_CTRL
+                Thread.Sleep(500);
+                if (fn_Ftdi_IsBusy() == 0)
+                {
+                    fn_Ftdi_Write(0x00, PROM_READ); //SINGLE_READ
+                    Thread.Sleep(500);
+                }
+            }
+            fn_Ftdi_Read(out PageData, out PageAddress);
+        }
+
+        public static uint fn_SetBitToZero(uint value, int index)
+        {
+            return value & ~(1u << index);
+        }
+
+        public static uint fn_SetBitToOne(uint value, int index)
+        {
+            return value | (1u << index);
         }
 
         private void fn_Ftdi_PageWrite(byte command, uint DATA)
         {
-            command = (byte)(command << 8); // 將命令轉換為 8 位元格式
             fn_Ftdi_Write(command, DATA);
         }
+
+        private void btn_PageWrite_Click(object sender, RoutedEventArgs e)
+        {
+            ulong dataA = 0x1234567890;
+            //ulong dataB = 0x2234567890;
+            //ulong dataC = 0x3234567890;
+            //ulong dataD = 0x4234567890;
+            fn_Ftdi_Write(0x0A, dataA);// PROM_WRITE1
+            //fn_Ftdi_Write(0x0B, dataB);// PROM_WRITE2
+            //fn_Ftdi_Write(0x0C, dataC);// PROM_WRITE3
+            //fn_Ftdi_Write(0x0D, dataD);// PROM_WRITE4
+
+            uint Address = 0x0230000;
+            Address = fn_SetBitToZero(Address, 23);
+            fn_Ftdi_Write(0x09, Address); // PROM_READ1
+
+
+            uint returnData_A;
+            byte address_A;
+            //uint returnData_B;
+            //byte address_B;
+            //uint returnData_C;
+            //byte address_C;
+            //uint returnData_D;
+            //byte address_D;
+
+            fn_Ftdi_PageRead(2, 64, 0x0000, 0x0A, out uint PageDataA, out byte PageAddressA);
+            //fn_Ftdi_PageRead(2, 64, 0x20, 0x0B, out uint PageDataB, out byte PageAddressB);
+            //fn_Ftdi_PageRead(2, 64, 0x40, 0x0C, out uint PageDataC, out byte PageAddressC);
+            //fn_Ftdi_PageRead(2, 64, 0x60, 0x0D, out uint PageDataD, out byte PageAddressD);
+
+
+        }
+
+        private void btn_PageRead_Click(object sender, RoutedEventArgs e)
+        {
+            fn_Ftdi_PageRead(2, 64, 0x0000,0x0A, out uint PageData, out byte PageAddress);
+        }
+
+        private void btn_BusyCheck_Click(object sender, RoutedEventArgs e)
+        {
+            fn_Ftdi_IsBusy();
+        }
+
+
     }
 }
