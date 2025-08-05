@@ -1,9 +1,11 @@
 ﻿using FTD2XX_NET;
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace A4_MotherBoard_Tester_WPF
 {
@@ -32,6 +34,9 @@ namespace A4_MotherBoard_Tester_WPF
                 fn_FeedBackMessage(fn_Ftdi_Setting(FtdiCount));
                 fn_IfConnectedWillMakeSound();
             }
+
+            fn_GiveTxtVal_16to2(0x1234, 0x4321, 0x5678, 0x8756);
+            fn_Init_register();
         }
 
         #region Ftdi functions
@@ -123,7 +128,7 @@ namespace A4_MotherBoard_Tester_WPF
             if (Send != null && Send.Length >= 6)
             {
                 // 清空佇列
-                Purge();
+                //Purge();
                 uint bytesWritten = 0;
                 if (Globle_Ftdi.Write(Send, Send.Length, ref bytesWritten) != FTDI.FT_STATUS.FT_OK)
                 {
@@ -362,29 +367,47 @@ namespace A4_MotherBoard_Tester_WPF
             return value | (1u << index);
         }
 
-        private void fn_Ftdi_PageWrite(byte command, uint DATA)
+        private void fn_Ftdi_PageWrite(uint PROM_WRITE_Data1, uint PROM_WRITE_Data2, uint PROM_WRITE_Data3, uint PROM_WRITE_Data4)
         {
-            fn_Ftdi_Write(command, DATA);
-        }
 
-        private void btn_PageWrite_Click(object sender, RoutedEventArgs e)
-        {
-            ulong dataA = 0x1234567890;
-            //ulong dataB = 0x2234567890;
-            //ulong dataC = 0x3234567890;
-            //ulong dataD = 0x4234567890;
-            fn_Ftdi_Write(0x0A, dataA);// PROM_WRITE1
-            //fn_Ftdi_Write(0x0B, dataB);// PROM_WRITE2
-            //fn_Ftdi_Write(0x0C, dataC);// PROM_WRITE3
-            //fn_Ftdi_Write(0x0D, dataD);// PROM_WRITE4
+            fn_Ftdi_Write(0x0A, PROM_WRITE_Data1);// PROM_WRITE1
+            fn_Ftdi_Write(0x0B, PROM_WRITE_Data2);// PROM_WRITE2
+            fn_Ftdi_Write(0x0C, PROM_WRITE_Data3);// PROM_WRITE3
+            fn_Ftdi_Write(0x0D, PROM_WRITE_Data4);// PROM_WRITE4
+            int timeout = 10000; // 5秒超時
+            //while (true)
+            //{
+            //    if (fn_Ftdi_IsBusy() == 0)
+            //    {
+            //        break;
+            //    }
+            //}
 
             uint Address = 0x0230000;
             Address = fn_SetBitToZero(Address, 23);
             fn_Ftdi_Write(0x09, Address); // PROM_READ1
 
+            
+            //var startTime = Environment.TickCount;
+            //var timeoutMs = 10000; // 設定超時時間為 5 秒
+            //while (true)
+            //{
+            //    if (fn_Ftdi_IsBusy() == 0)
+            //    {
+            //        break;
+            //    }
+            //    if (Environment.TickCount - startTime > timeoutMs)
+            //    {
+            //        return false; // Timeout 發生
+            //    }
 
-            uint returnData_A;
-            byte address_A;
+            //    Thread.Sleep(1); // 加這個避免 CPU 100% 占用
+            //}
+            //return true;
+
+
+            //uint returnData_A;
+            //byte address_A;
             //uint returnData_B;
             //byte address_B;
             //uint returnData_C;
@@ -392,17 +415,23 @@ namespace A4_MotherBoard_Tester_WPF
             //uint returnData_D;
             //byte address_D;
 
-            fn_Ftdi_PageRead(2, 64, 0x0000, 0x0A, out uint PageDataA, out byte PageAddressA);
-            //fn_Ftdi_PageRead(2, 64, 0x20, 0x0B, out uint PageDataB, out byte PageAddressB);
-            //fn_Ftdi_PageRead(2, 64, 0x40, 0x0C, out uint PageDataC, out byte PageAddressC);
-            //fn_Ftdi_PageRead(2, 64, 0x60, 0x0D, out uint PageDataD, out byte PageAddressD);
+            ////這邊回應的是DEC(十進制)
+           fn_Ftdi_PageRead(2, 64, 0x0000, 0x0A, out uint PageDataA, out byte PageAddressA);
+            //fn_Ftdi_PageRead(2, 64, 0x0004, 0x0B, out uint PageDataB, out byte PageAddressB);
+            //fn_Ftdi_PageRead(2, 64, 0x0000, 0x0C, out uint PageDataC, out byte PageAddressC);
+            //fn_Ftdi_PageRead(2, 64, 0x0000, 0x0D, out uint PageDataD, out byte PageAddressD);
 
+        }
+
+        private void btn_PageWrite_Click(object sender, RoutedEventArgs e)
+        {
+            fn_Ftdi_PageWrite(0x1234, 0x1234, 0x1234, 0x1234);
 
         }
 
         private void btn_PageRead_Click(object sender, RoutedEventArgs e)
         {
-            fn_Ftdi_PageRead(2, 64, 0x0000,0x0A, out uint PageData, out byte PageAddress);
+            fn_Ftdi_PageRead(2, 32, 0x0000, 0x0A, out uint PageData, out byte PageAddress);
         }
 
         private void btn_BusyCheck_Click(object sender, RoutedEventArgs e)
@@ -411,5 +440,180 @@ namespace A4_MotherBoard_Tester_WPF
         }
 
 
+
+
+        private void fn_GiveTxtVal_16to2(uint Page0, uint Page1, uint Page2, uint Page3)
+        {
+            List<TextBox> lst_PageWrite_TextBox = new List<TextBox>
+            { txt_40, txt_30,txt_20, txt_10,
+             txt_41, txt_31,txt_21, txt_11,
+             txt_42, txt_32,txt_22, txt_12,
+             txt_43, txt_33,txt_23, txt_13,};
+
+            txt_Page0_16x.Text = "0x" + Page0.ToString("X4");
+            txt_Page1_16x.Text = "0x" + Page1.ToString("X4");
+            txt_Page2_16x.Text = "0x" + Page2.ToString("X4");
+            txt_Page3_16x.Text = "0x" + Page3.ToString("X4");
+            string Bin0 = Convert.ToString(Page0, 2).PadLeft(16, '0');
+            string Bin1 = Convert.ToString(Page1, 2).PadLeft(16, '0');
+            string Bin2 = Convert.ToString(Page2, 2).PadLeft(16, '0');
+            string Bin3 = Convert.ToString(Page3, 2).PadLeft(16, '0');
+            string b = Bin0 + Bin1 + Bin2 + Bin3;
+
+            if (b.Length > 64)
+            {
+
+            }
+            else
+            {
+                for (int i = 0; i < 16; i++)
+                {
+                    lst_PageWrite_TextBox[i].Text = b.Substring(i * 4, 4); // 取出每4位二進位數字
+                }
+            }
+
+
+        }
+
+        private void fn_GiveTxtVal_2to16(List<string> BinList)
+        {
+
+        }
+
+        private void RadBtn_PWprest_Click(object sender, RoutedEventArgs e)
+        {
+            RadioButton radioButton = sender as RadioButton;
+            if (RadBtn_PWpreste1.IsChecked == true)
+            {
+                fn_GiveTxtVal_16to2(0x1234, 0x4321, 0x5678, 0x8756);
+            }
+            else if (RadBtn_PWpreste2.IsChecked == true)
+            {
+                fn_GiveTxtVal_16to2(0x4321, 0x1234, 0x8756, 0x5678);
+            }
+            else if (RadBtn_PWpreste3.IsChecked == true)
+            {
+                fn_GiveTxtVal_16to2(0x5678, 0x8756, 0x1234, 0x4321);
+            }
+            else if (RadBtn_PWpreste4.IsChecked == true)
+            {
+                fn_GiveTxtVal_16to2(0x8756, 0x5678, 0x4321, 0x1234);
+            }
+
+        }
+
+        private void btn_PageWrite_2_Click(object sender, RoutedEventArgs e)
+        {
+            uint d1 = Convert.ToUInt32(txt_Page0_16x.Text.Substring(2), 16);
+            uint d2 = Convert.ToUInt32(txt_Page1_16x.Text.Substring(2), 16);
+            uint d3 = Convert.ToUInt32(txt_Page2_16x.Text.Substring(2), 16);
+            uint d4 = Convert.ToUInt32(txt_Page3_16x.Text.Substring(2), 16);
+
+            fn_Ftdi_PageWrite(d1, d2, d3, d4);
+        }
+
+
+
+        private void txt_Page0_16To2(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            try
+            {
+                if (e.Key == Key.Enter)
+                {
+                    fn_GiveTxtVal_16to2(
+                                      Convert.ToUInt32(txt_Page0_16x.Text.Substring(2), 16),
+                                      Convert.ToUInt32(txt_Page1_16x.Text.Substring(2), 16),
+                                      Convert.ToUInt32(txt_Page2_16x.Text.Substring(2), 16),
+                                      Convert.ToUInt32(txt_Page3_16x.Text.Substring(2), 16));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void txt_Page0_2To16(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+
+            List<List<string>> allNames = new List<List<string>>
+              {
+                     new List<string> { "txt_40", "txt_30", "txt_20", "txt_10" },
+                     new List<string> { "txt_41", "txt_31", "txt_21", "txt_11" },
+                     new List<string> { "txt_42", "txt_32", "txt_22", "txt_12" },
+                    new List<string> { "txt_43", "txt_33", "txt_23", "txt_13" }
+               };
+
+            List<string> hexTextBoxes = new List<string>    {
+        "txt_Page0_16x",
+        "txt_Page1_16x",
+        "txt_Page2_16x",
+        "txt_Page3_16x"    };
+
+            for (int i = 0; i < allNames.Count; i++)
+            {
+                string binary = "";
+
+                foreach (string name in allNames[i])
+                {
+                    var txtBox = this.FindName(name) as TextBox;
+                    if (txtBox == null) return;
+
+                    string value = txtBox.Text.Trim();
+
+                    // 自動補足4位，不管原本長度多少
+                    if (value.Length > 4) value = value.Substring(0, 4);
+                    value = value.PadLeft(4, '0');
+
+                    // 只判斷是不是全部0或1
+                    if (!Regex.IsMatch(value, "^[01]+$"))
+                    {
+                        // 如果非二進制字串，仍然繼續下一組，或你也可以顯示錯誤
+                        value = "0000";  // 直接用0代替
+                    }
+
+                    binary += value;
+                }
+
+                // 一律補足16位（安全保險）
+                binary = binary.PadLeft(16, '0');
+
+                uint hexValue = Convert.ToUInt32(binary, 2);
+                string hexString = "0x" + hexValue.ToString("X4");
+
+                var resultBox = this.FindName(hexTextBoxes[i]) as TextBox;
+                if (resultBox != null)
+                {
+                    resultBox.Text = hexString;
+                }
+            }
+        }
+
+        private void fn_Init_register()
+        {
+            txt_10.KeyDown += txt_Page0_2To16;
+            txt_11.KeyDown += txt_Page0_2To16;
+            txt_12.KeyDown += txt_Page0_2To16;
+            txt_13.KeyDown += txt_Page0_2To16;
+
+            txt_20.KeyDown += txt_Page0_2To16;
+            txt_21.KeyDown += txt_Page0_2To16;
+            txt_22.KeyDown += txt_Page0_2To16;
+            txt_23.KeyDown += txt_Page0_2To16;
+
+            txt_30.KeyDown += txt_Page0_2To16;
+            txt_31.KeyDown += txt_Page0_2To16;
+            txt_32.KeyDown += txt_Page0_2To16;
+            txt_33.KeyDown += txt_Page0_2To16;
+
+            txt_40.KeyDown += txt_Page0_2To16;
+            txt_41.KeyDown += txt_Page0_2To16;
+            txt_42.KeyDown += txt_Page0_2To16;
+            txt_43.KeyDown += txt_Page0_2To16;
+
+        }
     }
 }
