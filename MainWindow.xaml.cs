@@ -16,7 +16,9 @@ namespace A4_MotherBoard_Tester_WPF
     {
         FTDI Globle_Ftdi = new FTDI();
         int iTxtFeedBack_Count = 1;
-
+        bool window_isLoaded = false;
+        PromCtrlParameters Class_promCtrlParameters = new PromCtrlParameters();
+        uint uint_PromCtrl_AddressVar = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,7 +39,46 @@ namespace A4_MotherBoard_Tester_WPF
 
             fn_GiveTxtVal_16to2(0x1234, 0x4321, 0x5678, 0x8756);
             fn_Init_register();
+
+
+            cob_PromCtrl_17to16.SelectedIndex = Properties.Settings.Default.LastSelected_17to16;
+            cob_PromCtrl_19.SelectedIndex = Properties.Settings.Default.LastSelected_19;
+            cob_PromCtrl_22to20.SelectedIndex = Properties.Settings.Default.LastSelected_22to20;
+            cob_PromCtrl_23.SelectedIndex = Properties.Settings.Default.LastSelected_23;
+            cob_PromCtrl_25to24.SelectedIndex = Properties.Settings.Default.LastSelected_25to24;
+
+            window_isLoaded = true; // 確保在設定完 ComboBox 之後才設為 true
+
+            fn_GivePromCtrlParameters();
+            #region 清空所有txt_xx_Read內的text
+            txt_Page0_16x_Read.Clear();
+            txt_Page1_16x_Read.Clear();
+            txt_Page2_16x_Read.Clear();
+            txt_Page3_16x_Read.Clear();
+            txt_40_Read.Clear();
+            txt_30_Read.Clear();
+            txt_20_Read.Clear();
+            txt_10_Read.Clear();
+
+            txt_41_Read.Clear();
+            txt_31_Read.Clear();
+            txt_21_Read.Clear();
+            txt_11_Read.Clear();
+
+            txt_42_Read.Clear();
+            txt_32_Read.Clear();
+            txt_22_Read.Clear();
+            txt_12_Read.Clear();
+
+            txt_43_Read.Clear();
+            txt_33_Read.Clear();
+            txt_23_Read.Clear();
+            txt_13_Read.Clear();
+            #endregion
+
         }
+
+
 
         #region Ftdi functions
         private string fn_Ftdi_Init(out int FindFtdiCount)
@@ -326,23 +367,30 @@ namespace A4_MotherBoard_Tester_WPF
         /// <param name="StartAddress">開始讀取的記憶體位置</param>
         /// <param name="PageData">Feed back data (OUTPUT)</param>
         /// <param name="PageAddress">Address of the feed back data (OUTPUT)</param>
-        private void fn_Ftdi_PageRead(uint ID, uint ReadSize, uint StartAddress, uint PROM_READ, out uint PageData, out byte PageAddress)
+        private void fn_Ftdi_PageRead( uint read_address,out uint PageData, out byte PageAddress)
         {
-            if (ReadSize == 8 || ReadSize == 0) ReadSize = 0;
-            else if (ReadSize == 16 || ReadSize == 1) ReadSize = 1;
-            else if (ReadSize == 32 || ReadSize == 2) ReadSize = 2;
-            else if (ReadSize == 64 || ReadSize == 3) ReadSize = 3;
-            else if (ReadSize == 128 || ReadSize == 4) ReadSize = 4;
-            else MessageBox.Show("ReadSize 只能是 8, 16, 32, 64");
+            
 
 
             //0x0230000 ->  ID = 2  , 3 = 64byte讀取資料大小, 從0000開始讀取
             //uint Address = 0x0230000;
 
-            uint Address = StartAddress;
-            Address = ID * 0x100000 + Address;
-            Address = ReadSize * 0x10000 + Address;
-            Address = fn_SetBitToOne(Address, 23);
+            // uint Address = StartAddress;
+            // Address = ID * 0x100000 + Address;
+            // Address = ReadSize * 0x10000 + Address;
+            //Address = fn_SetBitToOne(Address, 23);
+           string str_addre =
+                     Class_promCtrlParameters.Bit31_26 +
+                     Class_promCtrlParameters.Bit25_24_I2C_clock_frequency +
+                     Class_promCtrlParameters.Bit23_Type +
+                     Class_promCtrlParameters.Bit22_20_ID +
+                     "1" +
+                     Class_promCtrlParameters.Bit18 +
+                     Class_promCtrlParameters.Bit17_16_ByteSize +
+                     Class_promCtrlParameters.Bit15_0_Address;
+
+            uint Address = Convert.ToUInt32(str_addre, 2);
+
 
             if (fn_Ftdi_IsBusy() == 0)
             {
@@ -350,7 +398,7 @@ namespace A4_MotherBoard_Tester_WPF
                 Thread.Sleep(500);
                 if (fn_Ftdi_IsBusy() == 0)
                 {
-                    fn_Ftdi_Write(0x00, PROM_READ); //SINGLE_READ
+                    fn_Ftdi_Write(0x00, read_address); //SINGLE_READ
                     Thread.Sleep(500);
                 }
             }
@@ -367,43 +415,57 @@ namespace A4_MotherBoard_Tester_WPF
             return value | (1u << index);
         }
 
-        private void fn_Ftdi_PageWrite(uint PROM_WRITE_Data1, uint PROM_WRITE_Data2, uint PROM_WRITE_Data3, uint PROM_WRITE_Data4)
+        private bool fn_Ftdi_PageWrite(uint PROM_WRITE_Data1, uint PROM_WRITE_Data2, uint PROM_WRITE_Data3, uint PROM_WRITE_Data4)
         {
+            string strFull_promCtrlParameters =
+               Class_promCtrlParameters.Bit31_26 +
+                  Class_promCtrlParameters.Bit25_24_I2C_clock_frequency +
+                  Class_promCtrlParameters.Bit23_Type +
+                  Class_promCtrlParameters.Bit22_20_ID +
+                  Class_promCtrlParameters.Bit19_RDWR +
+                  Class_promCtrlParameters.Bit18 +
+                  Class_promCtrlParameters.Bit17_16_ByteSize +
+                  Class_promCtrlParameters.Bit15_0_Address;
+
+            // 將二進制字串轉換為16進制uint
+            uint promCtrlParameters = Convert.ToUInt32(strFull_promCtrlParameters, 2);
 
             fn_Ftdi_Write(0x0A, PROM_WRITE_Data1);// PROM_WRITE1
             fn_Ftdi_Write(0x0B, PROM_WRITE_Data2);// PROM_WRITE2
             fn_Ftdi_Write(0x0C, PROM_WRITE_Data3);// PROM_WRITE3
             fn_Ftdi_Write(0x0D, PROM_WRITE_Data4);// PROM_WRITE4
             int timeout = 10000; // 5秒超時
-            //while (true)
-            //{
-            //    if (fn_Ftdi_IsBusy() == 0)
-            //    {
-            //        break;
-            //    }
-            //}
+            while (true)
+            {
+                if (fn_Ftdi_IsBusy() == 0)
+                {
+                    break;
+                }
+            }
 
-            uint Address = 0x0230000;
-            Address = fn_SetBitToZero(Address, 23);
-            fn_Ftdi_Write(0x09, Address); // PROM_READ1
 
-            
-            //var startTime = Environment.TickCount;
-            //var timeoutMs = 10000; // 設定超時時間為 5 秒
-            //while (true)
-            //{
-            //    if (fn_Ftdi_IsBusy() == 0)
-            //    {
-            //        break;
-            //    }
-            //    if (Environment.TickCount - startTime > timeoutMs)
-            //    {
-            //        return false; // Timeout 發生
-            //    }
 
-            //    Thread.Sleep(1); // 加這個避免 CPU 100% 占用
-            //}
-            //return true;
+            //uint Address = 0x0230000;
+            //Address = fn_SetBitToZero(Address, 23);//這是韌體改版前的RD_WR
+            fn_Ftdi_Write(0x09, uint_PromCtrl_AddressVar); // PROM_control
+
+
+            var startTime = Environment.TickCount;
+            var timeoutMs = 10000; // 設定超時時間為 5 秒
+            while (true)
+            {
+                if (fn_Ftdi_IsBusy() == 0)
+                {
+                    break;
+                }
+                if (Environment.TickCount - startTime > timeoutMs)
+                {
+                    return false; // Timeout 發生
+                }
+
+                Thread.Sleep(1); // 加這個避免 CPU 100% 占用
+            }
+            return true;
 
 
             //uint returnData_A;
@@ -416,7 +478,7 @@ namespace A4_MotherBoard_Tester_WPF
             //byte address_D;
 
             ////這邊回應的是DEC(十進制)
-           fn_Ftdi_PageRead(2, 64, 0x0000, 0x0A, out uint PageDataA, out byte PageAddressA);
+            //fn_Ftdi_PageRead(2, 64, 0x0000, 0x0A, out uint PageDataA, out byte PageAddressA);
             //fn_Ftdi_PageRead(2, 64, 0x0004, 0x0B, out uint PageDataB, out byte PageAddressB);
             //fn_Ftdi_PageRead(2, 64, 0x0000, 0x0C, out uint PageDataC, out byte PageAddressC);
             //fn_Ftdi_PageRead(2, 64, 0x0000, 0x0D, out uint PageDataD, out byte PageAddressD);
@@ -431,7 +493,26 @@ namespace A4_MotherBoard_Tester_WPF
 
         private void btn_PageRead_Click(object sender, RoutedEventArgs e)
         {
-            fn_Ftdi_PageRead(2, 32, 0x0000, 0x0A, out uint PageData, out byte PageAddress);
+            if(RadBtn_ReadP1.IsChecked == true)
+                {
+                fn_Ftdi_PageRead(0x0A, out uint PageData, out byte PageAddress);
+                fn_GivePageReadUiValue(PageData, 0);
+            }
+            else if (RadBtn_ReadP2.IsChecked == true)
+            {
+                fn_Ftdi_PageRead(0x0B, out uint PageData, out byte PageAddress);
+                fn_GivePageReadUiValue(PageData, 1);
+            }
+            else if (RadBtn_ReadP3.IsChecked == true)
+            {
+                fn_Ftdi_PageRead(0x0C, out uint PageData, out byte PageAddress);
+                fn_GivePageReadUiValue(PageData, 2);
+            }
+            else if (RadBtn_ReadP4.IsChecked == true)
+            {
+                fn_Ftdi_PageRead(0x0D, out uint PageData, out byte PageAddress);
+                fn_GivePageReadUiValue(PageData, 3);
+            }          
         }
 
         private void btn_BusyCheck_Click(object sender, RoutedEventArgs e)
@@ -475,9 +556,78 @@ namespace A4_MotherBoard_Tester_WPF
 
         }
 
-        private void fn_GiveTxtVal_2to16(List<string> BinList)
+        private void fn_GivePageReadUiValue(uint pageData , int WhitchPage)
         {
+            //清空所有txt_xx_Read內的text
+            #region 清空所有txt_xx_Read內的text
+            txt_Page0_16x_Read.Clear();
+            txt_Page1_16x_Read.Clear();
+            txt_Page2_16x_Read.Clear();
+            txt_Page3_16x_Read.Clear();
+            txt_40_Read.Clear();
+            txt_30_Read.Clear();
+            txt_20_Read.Clear();
+            txt_10_Read.Clear();
 
+            txt_41_Read.Clear();
+            txt_31_Read.Clear();
+            txt_21_Read.Clear();
+            txt_11_Read.Clear();
+
+            txt_42_Read.Clear();
+            txt_32_Read.Clear();
+            txt_22_Read.Clear();
+            txt_12_Read.Clear();
+
+            txt_43_Read.Clear();
+            txt_33_Read.Clear();
+            txt_23_Read.Clear();
+            txt_13_Read.Clear();
+            #endregion
+
+
+            // 將 pageData 轉換為 2 進制字串
+            string binaryString = Convert.ToString(pageData, 2).PadLeft(16, '0');
+            // 將二進制字串分割成 4 位一組
+            string[] binaryGroups = new string[4];
+            for (int i = 0; i < 4; i++)
+            {
+                binaryGroups[i] = binaryString.Substring(i * 4, 4);
+            }
+
+            if (WhitchPage == 0)
+            {
+                txt_Page0_16x_Read.Text = "0x" + pageData.ToString("X4");
+                txt_40_Read.Text = binaryGroups[0];
+                txt_30_Read.Text = binaryGroups[1];
+                txt_20_Read.Text = binaryGroups[2];
+                txt_10_Read.Text = binaryGroups[3];
+            }
+            else if (WhitchPage == 1)
+            {
+                txt_Page1_16x_Read.Text = "0x" + pageData.ToString("X4");
+                txt_41_Read.Text = binaryGroups[0];
+                txt_31_Read.Text = binaryGroups[1];
+                txt_21_Read.Text = binaryGroups[2];
+                txt_11_Read.Text = binaryGroups[3];
+            }
+            else if (WhitchPage == 2)
+            {
+                txt_Page2_16x_Read.Text = "0x" + pageData.ToString("X4");
+                txt_42_Read.Text = binaryGroups[0];
+                txt_32_Read.Text = binaryGroups[1];
+                txt_22_Read.Text = binaryGroups[2];
+                txt_12_Read.Text = binaryGroups[3];
+
+            }
+            else if (WhitchPage == 3)
+            {
+                txt_Page3_16x_Read.Text = "0x" + pageData.ToString("X4");
+                txt_43_Read.Text = binaryGroups[0];
+                txt_33_Read.Text = binaryGroups[1];
+                txt_23_Read.Text = binaryGroups[2];
+                txt_13_Read.Text = binaryGroups[3];
+            }
         }
 
         private void RadBtn_PWprest_Click(object sender, RoutedEventArgs e)
@@ -504,12 +654,16 @@ namespace A4_MotherBoard_Tester_WPF
 
         private void btn_PageWrite_2_Click(object sender, RoutedEventArgs e)
         {
+            fn_GivePromCtrlParameters();
             uint d1 = Convert.ToUInt32(txt_Page0_16x.Text.Substring(2), 16);
             uint d2 = Convert.ToUInt32(txt_Page1_16x.Text.Substring(2), 16);
             uint d3 = Convert.ToUInt32(txt_Page2_16x.Text.Substring(2), 16);
             uint d4 = Convert.ToUInt32(txt_Page3_16x.Text.Substring(2), 16);
 
-            fn_Ftdi_PageWrite(d1, d2, d3, d4);
+            if (!fn_Ftdi_PageWrite(d1, d2, d3, d4))
+            {
+                MessageBox.Show("寫入失敗，請檢查連接或裝置狀態。");
+            }
         }
 
 
@@ -615,5 +769,112 @@ namespace A4_MotherBoard_Tester_WPF
             txt_43.KeyDown += txt_Page0_2To16;
 
         }
+
+        private void cob_PromCtrl_combox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (window_isLoaded)
+            {
+                Properties.Settings.Default.LastSelected_17to16 = cob_PromCtrl_17to16.SelectedIndex;
+                Properties.Settings.Default.LastSelected_19 = cob_PromCtrl_19.SelectedIndex;
+                Properties.Settings.Default.LastSelected_22to20 = cob_PromCtrl_22to20.SelectedIndex;
+                Properties.Settings.Default.LastSelected_23 = cob_PromCtrl_23.SelectedIndex;
+                Properties.Settings.Default.LastSelected_25to24 = cob_PromCtrl_25to24.SelectedIndex;
+                Properties.Settings.Default.Save();
+                fn_GivePromCtrlParameters();
+            }
+
+
+            
+        }
+
+        private void txt_PromCtrl_15to0_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (window_isLoaded)
+            {
+                Properties.Settings.Default.LastInputAddrese = txt_PromCtrl_15to0.Text.Trim();
+                Properties.Settings.Default.Save();
+                fn_GivePromCtrlParameters();
+            }
+
+            
+        }
+
+        private void fn_GivePromCtrlParameters()//這個好用
+        {
+
+            if (window_isLoaded)
+            {
+                try
+                {
+                    string strFor15_0_binaryString = "";
+
+                    if (txt_PromCtrl_15to0.Text.Length < 16)
+                    {//16進制
+                     //將16進制轉為2進制
+                        strFor15_0_binaryString = Convert.ToString(Convert.ToUInt16(txt_PromCtrl_15to0.Text, 16), 2).PadLeft(16, '0');
+                    }
+                    else
+                    {//2進制
+                        strFor15_0_binaryString = txt_PromCtrl_15to0.Text.Trim();
+                    }
+
+                    ComboBoxItem selectedItem1716 = (ComboBoxItem)cob_PromCtrl_17to16.SelectedItem;
+                    ComboBoxItem selectedItem19 = (ComboBoxItem)cob_PromCtrl_19.SelectedItem;
+                    ComboBoxItem selectedItem2220 = (ComboBoxItem)cob_PromCtrl_22to20.SelectedItem;
+                    ComboBoxItem selectedItem23 = (ComboBoxItem)cob_PromCtrl_23.SelectedItem;
+                    ComboBoxItem selectedItem2524 = (ComboBoxItem)cob_PromCtrl_25to24.SelectedItem;
+
+                    Class_promCtrlParameters = new PromCtrlParameters
+                    {
+                        Bit15_0_Address = strFor15_0_binaryString, // 16 bits, default to 0
+                        Bit17_16_ByteSize = selectedItem1716.Tag.ToString(), // 2 bits, default to 0
+
+                        Bit19_RDWR = selectedItem19.Tag.ToString(), // 2 bits, default to 0
+                        Bit22_20_ID = selectedItem2220.Tag.ToString(), // 3 bits, default to 0
+                        Bit23_Type = selectedItem23.Tag.ToString(), // 1 bit, default to 0
+                        Bit25_24_I2C_clock_frequency = selectedItem2524.Tag.ToString(), // 2 bits, default to 0
+                    };
+
+                    txt_PromCtrl_bin.Text =
+                        Class_promCtrlParameters.Bit31_26 +
+                        Class_promCtrlParameters.Bit25_24_I2C_clock_frequency +
+                        Class_promCtrlParameters.Bit23_Type +
+                        Class_promCtrlParameters.Bit22_20_ID +
+                        Class_promCtrlParameters.Bit19_RDWR +
+                        Class_promCtrlParameters.Bit18 +
+                        Class_promCtrlParameters.Bit17_16_ByteSize +
+                        Class_promCtrlParameters.Bit15_0_Address;
+
+                    // 將二進制字串轉換為16進制uint
+
+                    uint promCtrlParameters = Convert.ToUInt32(txt_PromCtrl_bin.Text, 2);
+                    txt_PromCtrl_hex.Text = "0x" + promCtrlParameters.ToString("X8");
+                    uint_PromCtrl_AddressVar = Convert.ToUInt32(txt_PromCtrl_bin.Text, 2);
+
+                    // 將二進制字串轉換為DEx進制uint
+                    txt_PromCtrl_dec.Text = promCtrlParameters.ToString("D");
+                    
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
+
+
+        class PromCtrlParameters
+        {
+            public string Bit15_0_Address { get; set; }
+            public string Bit17_16_ByteSize { get; set; }
+            public string Bit18 = "0";
+            public string Bit19_RDWR { get; set; }
+            public string Bit22_20_ID { get; set; }
+            public string Bit23_Type { get; set; }
+            public string Bit25_24_I2C_clock_frequency { get; set; }
+            public string Bit31_26 = "000000"; // 6 bits, default to 0
+        }
+
+
     }
 }

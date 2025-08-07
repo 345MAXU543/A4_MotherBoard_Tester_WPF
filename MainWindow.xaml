@@ -5,67 +5,74 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:A4_MotherBoard_Tester_WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1000" Loaded="Window_Loaded">
+        Title="MainWindow" Height="800" Width="800" Loaded="Window_Loaded">
     <Viewbox Stretch="Fill">
-        <Canvas Height="800" Width="1000" Background="#FF2E402D">
-            <!--#region PROM CTRL-->
+        <Canvas Height="800" Width="800" Background="#FF2E402D">
+
 
             <GroupBox Height="217" Header="PROM CTRL :" Width="758" Canvas.Left="22" Canvas.Top="18" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <GroupBox Height="250" Header="Page Write:" Width="758" Canvas.Left="22" Canvas.Top="250" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FFFFFDFD"/>
 
             <!--#region HIDDEN-->
-            <TextBox Visibility="Visible" x:Name="txt_ReadBackMessage" Canvas.Left="821" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="200" Height="54" Width="151" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <TextBox Visibility="Visible" x:Name="txt_FtdiFeedBackMessage" Canvas.Left="872" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="110" HorizontalAlignment="Left" VerticalAlignment="Top" Width="96" Height="60"/>
-            <Button Visibility="Visible" x:Name="btn_BuzzerOn" Content="Buzzer ON" Canvas.Left="867" Canvas.Top="511" HorizontalAlignment="Left" VerticalAlignment="Top" Width="72" Click="btn_BuzzerOn_Click"/>
-            <Button Visibility="Visible" x:Name="btn_BuzzerOff" Content="Buzzer OFF" Canvas.Left="867" Canvas.Top="545" Width="72" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btn_BuzzerOff_Click"/>
-            <GroupBox Visibility="Visible" Height="93" Header="Buzzer" Width="101" Canvas.Left="846" Canvas.Top="487" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <Button Visibility="Visible" x:Name="btn_SINGLE_READ" Content="SINGLE READ" Canvas.Left="872" Canvas.Top="362" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Click="btn_SINGLE_READ_Click"/>
-            <Button Visibility="Visible" x:Name="btn_BusyCheck" Content="Busy?" Canvas.Left="872" Canvas.Top="328" Width="95" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btn_BusyCheck_Click"/>
-            <Label Visibility="Visible" x:Name="lb_BusyCheckRes" Content="Not busy !!!" Background="#FF02F502" Canvas.Left="872" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Visibility="Hidden" x:Name="txt_ReadBackMessage" Canvas.Left="821" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="200" Height="54" Width="151" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox Visibility="Hidden" x:Name="txt_FtdiFeedBackMessage" Canvas.Left="872" TextWrapping="Wrap" Text="TextBlock" Canvas.Top="110" HorizontalAlignment="Left" VerticalAlignment="Top" Width="96" Height="60"/>
+            <Button Visibility="Hidden" x:Name="btn_BuzzerOn" Content="Buzzer ON" Canvas.Left="867" Canvas.Top="511" HorizontalAlignment="Left" VerticalAlignment="Top" Width="72" Click="btn_BuzzerOn_Click"/>
+            <Button Visibility="Hidden" x:Name="btn_BuzzerOff" Content="Buzzer OFF" Canvas.Left="867" Canvas.Top="545" Width="72" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btn_BuzzerOff_Click"/>
+            <GroupBox Visibility="Hidden" Height="93" Header="Buzzer" Width="101" Canvas.Left="846" Canvas.Top="487" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button Visibility="Hidden" x:Name="btn_SINGLE_READ" Content="SINGLE READ" Canvas.Left="872" Canvas.Top="362" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Click="btn_SINGLE_READ_Click"/>
+            <Button Visibility="Hidden" x:Name="btn_BusyCheck" Content="Busy?" Canvas.Left="872" Canvas.Top="328" Width="95" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btn_BusyCheck_Click"/>
+            <Label Visibility="Hidden" x:Name="lb_BusyCheckRes" Content="Not busy !!!" Background="#FF02F502" Canvas.Left="872" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <!--#endregion-->
-            <Button x:Name="btn_PageWrite" Content="PageWrite" Canvas.Left="641" Canvas.Top="105" HorizontalAlignment="Left" VerticalAlignment="Center" Width="95" Click="btn_PageWrite_Click"/>
-            <Button x:Name="btn_PageRead" Content="PageRead" Canvas.Left="641" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Center" Width="95" Click="btn_PageRead_Click"/>
+
+            <Button  Visibility="Hidden" x:Name="btn_PageWrite" Content="PageWrite" Canvas.Left="821" Canvas.Top="25" HorizontalAlignment="Left" VerticalAlignment="Top" Width="95" Click="btn_PageWrite_Click"/>
+            <Button  Visibility="Hidden" x:Name="btn_PageRead" Content="PageRead" Canvas.Left="821" Canvas.Top="58" HorizontalAlignment="Left" VerticalAlignment="Top" Width="95" Click="btn_PageRead_Click"/>
 
 
             <!--#region PageWrite-->
-            <Button x:Name="btn_PageWrite_2" Content="寫入" Canvas.Left="704" Canvas.Top="379" HorizontalAlignment="Left" VerticalAlignment="Center" Height="60" Width="60" Click="btn_PageWrite_2_Click"/>
+            <Button x:Name="btn_PageWrite_2" Content="寫入" Canvas.Left="704" Canvas.Top="379" HorizontalAlignment="Left" VerticalAlignment="Center" Height="60" Width="60" Click="btn_PageWrite_2_Click" FontSize="20" FontWeight="Bold" Background="#FF9AEC8F" BorderThickness="2,2,2,2" BorderBrush="#FF3A523A">
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="20" RenderingBias="Quality" ShadowDepth="10" Direction="290"/>
+                </Button.Effect>
+            </Button>
             <Label Content="CMD PAGE = 0" Canvas.Left="142" Canvas.Top="271" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="CMD PAGE = 2" Canvas.Left="428" Canvas.Top="271" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="CMD PAGE = 3" Canvas.Left="570" Canvas.Top="271" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="CMD PAGE = 1" Canvas.Left="284" Canvas.Top="271" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
 
             <TextBox UseLayoutRounding="True" x:Name="txt_10" Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True" x:Name="txt_11" Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True" x:Name="txt_12" Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True" x:Name="txt_13" Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
+            <TextBox UseLayoutRounding="True" x:Name="txt_11" Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True" x:Name="txt_12" Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True" x:Name="txt_13" Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="301" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
 
-            <TextBox UseLayoutRounding="True"  x:Name="txt_20" Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_21" Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_22" Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_23" Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_20" Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_21" Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_22" Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_23" Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="339" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
 
-            <TextBox UseLayoutRounding="True"  x:Name="txt_30"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_31"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_32"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_33"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_30"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_31"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_32"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_33"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="379" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
 
-            <TextBox UseLayoutRounding="True"  x:Name="txt_40"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_41"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
-            <TextBox UseLayoutRounding="True"  x:Name="txt_42"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_40"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_41"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
+            <TextBox UseLayoutRounding="True"  x:Name="txt_42"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF9CCA99" Height="17"/>
             <TextBox UseLayoutRounding="True"  x:Name="txt_43"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="419" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99"/>
 
             <Label Content="PROM Write 1" Canvas.Left="32" Canvas.Top="294" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="PROM Write 2" Canvas.Left="32" Canvas.Top="334" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="PROM Write 3" Canvas.Left="32" Canvas.Top="374" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <Label Content="PROM Write 4" Canvas.Left="32" Canvas.Top="414" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
-            <RadioButton x:Name="RadBtn_PWpreste1" Content="Preset 1" Canvas.Left="704" Canvas.Top="276" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
-            <RadioButton x:Name="RadBtn_PWpreste2" Content="Preset 2" Canvas.Left="704" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
-            <RadioButton x:Name="RadBtn_PWpreste3" Content="Preset 3" Canvas.Left="704" Canvas.Top="322" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
-            <RadioButton x:Name="RadBtn_PWpreste4" Content="Preset 4" Canvas.Left="704" Canvas.Top="344" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
+            <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste1" Content="Preset 1" Canvas.Left="704" Canvas.Top="276" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"  />
+            <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste2" Content="Preset 2" Canvas.Left="704" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
+            <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste3" Content="Preset 3" Canvas.Left="704" Canvas.Top="322" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
+            <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste4" Content="Preset 4" Canvas.Left="704" Canvas.Top="344" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
             <TextBox  x:Name="txt_Page0_16x"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="467" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_Page1_16x"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="467" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_Page2_16x"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="467" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_Page3_16x"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="467" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
+            <!--#endregion-->
+
 
             <!--#region PageRead-->
             <GroupBox Height="250" Header="Page Read:" Width="758" Canvas.Left="22" Canvas.Top="531" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
@@ -98,59 +105,71 @@
             <TextBox  x:Name="txt_Page1_16x_Read"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="743" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_Page2_16x_Read"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="743" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_Page3_16x_Read"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="743" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_PromCtrl_hex" Canvas.Left="568" TextWrapping="Wrap" Text="TextBox" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox  x:Name="txt_PromCtrl_bin" Canvas.Left="72" TextWrapping="Wrap" Text="TextBox" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBox  x:Name="txt_PromCtrl_dec" Canvas.Left="324" TextWrapping="Wrap" Text="TextBox" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox  x:Name="txt_PromCtrl_hex" Canvas.Left="568" TextWrapping="Wrap" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox  x:Name="txt_PromCtrl_bin" Canvas.Left="72" TextWrapping="Wrap" Canvas.Top="194" Width="190" Background="#FF9CCA99" HorizontalAlignment="Center" VerticalAlignment="Top" Height="29"/>
+            <TextBox  x:Name="txt_PromCtrl_dec" Canvas.Left="324" TextWrapping="Wrap" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <!--#endregion-->
 
+
+            <!--#region PROM CTRL-->
             <Label UseLayoutRounding="True" Content="BIN :" Canvas.Left="35" Canvas.Top="201" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <Label UseLayoutRounding="True" Content="DEC :" Canvas.Left="284" Canvas.Top="202" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <Label UseLayoutRounding="True" Content="HEX :" Canvas.Left="528" Canvas.Top="202" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-            <Label UseLayoutRounding="True" Content="Bit15~0 Address" Canvas.Left="376" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label UseLayoutRounding="True" Content="Bit17~16 Byte size" Canvas.Left="240" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="121"/>
-            <Label UseLayoutRounding="True" Content="Bit18" Canvas.Left="183" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="41"/>
-            <Label UseLayoutRounding="True" Content="0" Canvas.Left="187" Canvas.Top="140" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label UseLayoutRounding="True" Content="Bit19 RD/WR#" Canvas.Left="45" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="97"/>
+            <Label UseLayoutRounding="True" Content="Bit15~0 Address ( HEX )" Canvas.Left="300" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label UseLayoutRounding="True" Content="Bit17~16 Byte size" Canvas.Left="111" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="121"/>
+            <Label UseLayoutRounding="True" Content="Bit18" Canvas.Left="46" Canvas.Top="114" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="41"/>
+            <Label UseLayoutRounding="True" Content="0" Canvas.Left="50" Canvas.Top="140" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label UseLayoutRounding="True" Content="Bit19 RD/WR#" Canvas.Left="591" Canvas.Top="46" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Width="97"/>
             <Label UseLayoutRounding="True" Content="Bit22~20 ID" Canvas.Left="441" Canvas.Top="45" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="82"/>
             <Label UseLayoutRounding="True" Content="Bit23 Type" Canvas.Left="296" Canvas.Top="45" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="74" HorizontalContentAlignment="Center"/>
             <Label UseLayoutRounding="True" Content="Bit25~24 I2C clock frequency" Canvas.Left="110" Canvas.Top="45" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="184"/>
             <Label UseLayoutRounding="True" Content="Bit31~26" Canvas.Left="44" Canvas.Top="45" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" Width="66"/>
             <Label UseLayoutRounding="True" Content="0000 00" Canvas.Left="44" Canvas.Top="72" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-            <ComboBox x:Name="cob_PromCtrl_17to16"  Canvas.Left="244" Canvas.Top="140" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <ComboBox x:Name="cob_PromCtrl_17to16"  Canvas.Left="115" Canvas.Top="140" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="cob_PromCtrl_combox_SelectionChanged" SelectedIndex="0">
                 <ComboBoxItem Content="00 : 8 bytes"   Tag="00"/>
                 <ComboBoxItem Content="01 : 16 bytes" Tag="01"/>
                 <ComboBoxItem Content="10 : 32 bytes" Tag="10"/>
                 <ComboBoxItem Content="11 : 64 bytes" Tag="11"/>
             </ComboBox>
 
-            <ComboBox x:Name="cob_PromCtrl_19"  Canvas.Left="49" Canvas.Top="140" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <ComboBox x:Name="cob_PromCtrl_19"  Canvas.Left="595" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="cob_PromCtrl_combox_SelectionChanged" SelectedIndex="0">
                 <ComboBoxItem Content="0 : Write" Tag="0"/>
                 <ComboBoxItem Content="1 : Read" Tag="1"/>
             </ComboBox>
 
-            <ComboBox x:Name="cob_PromCtrl_22to20" Canvas.Left="447" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <ComboBoxItem Content="2 : 主機板" Tag="2"/>
-                <ComboBoxItem Content="4 : Encoder #1" Tag="4"/>
-                <ComboBoxItem Content="5 : Encoder #2" Tag="5"/>
-                <ComboBoxItem Content="6 : L.C. #1" Tag="6"/>
-                <ComboBoxItem Content="7 : L.C. #2" Tag="7"/>
+            <ComboBox x:Name="cob_PromCtrl_22to20" Canvas.Left="447" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="cob_PromCtrl_combox_SelectionChanged" SelectedIndex="0">
+                <ComboBoxItem Content="2 : 主機板" Tag="010"/>
+                <ComboBoxItem Content="4 : Encoder #1" Tag="100"/>
+                <ComboBoxItem Content="5 : Encoder #2" Tag="101"/>
+                <ComboBoxItem Content="6 : L.C. #1" Tag="110"/>
+                <ComboBoxItem Content="7 : L.C. #2" Tag="111"/>
             </ComboBox>
 
-            <ComboBox x:Name="cob_PromCtrl_23"  Canvas.Left="304" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+            <ComboBox x:Name="cob_PromCtrl_23"  Canvas.Left="304" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" HorizontalContentAlignment="Center" SelectionChanged="cob_PromCtrl_combox_SelectionChanged" SelectedIndex="0">
                 <ComboBoxItem Content="0 : 2K bits(256 Byte) ,24C02" Tag="0"/>
                 <ComboBoxItem Content="1 : 32K~512K bits ,24C32~24C512" Tag="1"/>
             </ComboBox>
 
-            <ComboBox x:Name="cob_PromCtrl_25to24"  Canvas.Left="116" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <ComboBox x:Name="cob_PromCtrl_25to24"  Canvas.Left="116" Canvas.Top="72" Width="120" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="cob_PromCtrl_combox_SelectionChanged" SelectedIndex="0">
                 <ComboBoxItem Content="00 : Anti-Noise" Tag="00"        />
                 <ComboBoxItem Content="01 : Normal"       Tag="01"  />
                 <ComboBoxItem Content="10 : Standard"    Tag="10"           />
                 <ComboBoxItem Content="11 : Fast"              Tag="11" />
             </ComboBox>
-            <TextBox  x:Name="txt_PromCtrl_15to0" Canvas.Left="380" TextWrapping="Wrap" Text="TextBox" Canvas.Top="140" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBox  x:Name="txt_PromCtrl_15to0" Canvas.Left="304" TextWrapping="Wrap" Text="0000" Canvas.Top="140" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="txt_PromCtrl_15to0_TextChanged"/>
             <!--#endregion-->
 
+            <Button BorderThickness="2,2,2,2" x:Name="btn_PageRead_2" Content="讀取" Canvas.Left="704" Canvas.Top="663" Width="60" Click="btn_PageRead_Click" HorizontalAlignment="Center" VerticalAlignment="Top" Height="60" FontSize="20" FontWeight="Bold" Background="#FF9AEC8F" BorderBrush="#FF3A523A">
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="20" RenderingBias="Quality" ShadowDepth="10" Direction="290"/>
+                </Button.Effect>
+            </Button>
+            <RadioButton GroupName="PageReadGroup" x:Name="RadBtn_ReadP1" Content="Page 1" Canvas.Left="704" Canvas.Top="563" IsChecked="True"   Foreground="#FFD4C6C6" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <RadioButton GroupName="PageReadGroup" x:Name="RadBtn_ReadP2" Content="Page 2" Canvas.Left="704" Canvas.Top="585"  Foreground="#FFD4C6C6" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <RadioButton GroupName="PageReadGroup" x:Name="RadBtn_ReadP3" Content="Page 3" Canvas.Left="704" Canvas.Top="609"  Foreground="#FFD4C6C6" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <RadioButton GroupName="PageReadGroup" x:Name="RadBtn_ReadP4" Content="Page 4" Canvas.Left="704" Canvas.Top="631"  Foreground="#FFD4C6C6" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
         </Canvas>
     </Viewbox>
