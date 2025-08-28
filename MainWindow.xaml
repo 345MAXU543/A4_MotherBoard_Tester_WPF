@@ -10,6 +10,10 @@
         <Canvas Height="900" Width="800" Background="#FF2E402D">
 
 
+            <!--#region PageRead-->
+            <GroupBox Height="297" Header="Page Read:" Width="758" Canvas.Left="21" Canvas.Top="585" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White"/>
+
+
             <GroupBox Height="217" Header="PROM CTRL :" Width="758" Canvas.Left="22" Canvas.Top="18" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White"/>
             <GroupBox Height="310" Header="Page Write:" Width="758" Canvas.Left="22" Canvas.Top="250" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#FFFFFDFD"/>
 
@@ -67,15 +71,8 @@
             <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste2" Content="Preset 2" Canvas.Left="704" Canvas.Top="298" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
             <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste3" Content="Preset 3" Canvas.Left="704" Canvas.Top="322" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
             <RadioButton GroupName="PageWriteGroup" x:Name="RadBtn_PWpreste4" Content="Preset 4" Canvas.Left="704" Canvas.Top="344" HorizontalAlignment="Left" VerticalAlignment="Center" Click="RadBtn_PWprest_Click" Foreground="#FFD4C6C6"/>
-            <TextBox  x:Name="txt_Page0_16x"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="512" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page1_16x"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="512" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page2_16x"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="512" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page3_16x"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="512" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <!--#endregion-->
+            <TextBox  x:Name="txt_BigData"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="464" Width="548" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF9CCA99" KeyDown="txt_BigData_KeyDown"/>
 
-
-            <!--#region PageRead-->
-            <GroupBox Height="297" Header="Page Read:" Width="758" Canvas.Left="21" Canvas.Top="585" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White"/>
             <Label Content="CMD PAGE = 0" Canvas.Left="141" Canvas.Top="609" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
             <Label Content="CMD PAGE = 2" Canvas.Left="427" Canvas.Top="609" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
             <Label Content="CMD PAGE = 3" Canvas.Left="569" Canvas.Top="609" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
@@ -101,14 +98,9 @@
             <Label Content="PROM Read 3" Canvas.Left="31" Canvas.Top="712" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
             <Label Content="PROM Read 4" Canvas.Left="31" Canvas.Top="752" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White"/>
 
-            <TextBox  x:Name="txt_Page0_16x_Read"  Canvas.Left="142" TextWrapping="Wrap" Text="TextBox" Canvas.Top="833" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page1_16x_Read"  Canvas.Left="284" TextWrapping="Wrap" Text="TextBox" Canvas.Top="833" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page2_16x_Read"  Canvas.Left="428" TextWrapping="Wrap" Text="TextBox" Canvas.Top="833" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
-            <TextBox  x:Name="txt_Page3_16x_Read"  Canvas.Left="570" TextWrapping="Wrap" Text="TextBox" Canvas.Top="833" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" KeyDown="txt_Page0_16To2" Background="#FF9CCA99"/>
             <TextBox  x:Name="txt_PromCtrl_hex" Canvas.Left="568" TextWrapping="Wrap" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <TextBox  x:Name="txt_PromCtrl_bin" Canvas.Left="72" TextWrapping="Wrap" Canvas.Top="194" Width="190" Background="#FF9CCA99" HorizontalAlignment="Center" VerticalAlignment="Top" Height="29"/>
             <TextBox  x:Name="txt_PromCtrl_dec" Canvas.Left="324" TextWrapping="Wrap" Canvas.Top="206" Width="190" Background="#FF9CCA99" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <!--#endregion-->
 
 
             <!--#region PROM CTRL-->
