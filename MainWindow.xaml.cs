@@ -141,7 +141,8 @@ namespace A4_MotherBoard_Tester_WPF
         {
             Globle_Ftdi.SetLatency(0);
             Globle_Ftdi.SetBaudRate(115200);
-            Globle_Ftdi.SetDataCharacteristics(8, 1, 2); // 8-1-Even // 0-4=None,Odd,Even,Mark,Space
+           // Globle_Ftdi.SetDataCharacteristics(8, 0, 2); // 8-1-Even // 0-4=None,Odd,Even,Mark,Space
+            Globle_Ftdi.SetDataCharacteristics(FTDI.FT_DATA_BITS.FT_BITS_8, FTDI.FT_STOP_BITS.FT_STOP_BITS_1, FTDI.FT_PARITY.FT_PARITY_EVEN); // 8-1-Even // 0-4=None,Odd,Even,Mark,Space
             Globle_Ftdi.SetFlowControl(FTDI.FT_FLOW_CONTROL.FT_FLOW_NONE, 0x11, 0x13); // 無 flow control
 
             FTDI.FT_DEVICE_INFO_NODE[] deviceList = new FTDI.FT_DEVICE_INFO_NODE[count];
@@ -447,9 +448,9 @@ namespace A4_MotherBoard_Tester_WPF
             bool AllPageDone = false;
             int nowPage = 0;
             // if (Rad_ReadPage0.IsChecked == true) nowPage = 0;
-           // else if (Rad_ReadPage1.IsChecked == true) nowPage = 1;
+            // else if (Rad_ReadPage1.IsChecked == true) nowPage = 1;
             //else if (Rad_ReadPage2.IsChecked == true) nowPage = 2;
-           // else if (Rad_ReadPage3.IsChecked == true) nowPage = 3;
+            // else if (Rad_ReadPage3.IsChecked == true) nowPage = 3;
 
 
             switch (nowPage)
@@ -756,7 +757,7 @@ namespace A4_MotherBoard_Tester_WPF
                     {
                         fn_Ftdi_Write(0x09, Address);
                         while (true)
-                        {                        
+                        {
                             if (fn_Ftdi_IsBusy(nowPage) == 0 && retry < 10)
                             {
                                 fn_Ftdi_Write(0x00, Data_A); //SINGLE_READ
@@ -1002,9 +1003,14 @@ namespace A4_MotherBoard_Tester_WPF
         {
             fn_GivePromCtrlParameters();
             // 組合 PROM_control 的值
-            string str_addre = Class_promCtrlParameters.Bit31_26 + Class_promCtrlParameters.Bit25_24_I2C_clock_frequency + Class_promCtrlParameters.Bit23_Type + Class_promCtrlParameters.Bit22_20_ID +
-                     "0" +
-                     Class_promCtrlParameters.Bit18 + Class_promCtrlParameters.Bit17_16_ByteSize + Class_promCtrlParameters.Bit15_0_Address;
+            string str_addre = Class_promCtrlParameters.Bit31_26
+                + Class_promCtrlParameters.Bit25_24_I2C_clock_frequency
+                + Class_promCtrlParameters.Bit23_Type
+                + Class_promCtrlParameters.Bit22_20_ID
+                + "0"
+                + Class_promCtrlParameters.Bit18
+                + Class_promCtrlParameters.Bit17_16_ByteSize
+                + Class_promCtrlParameters.Bit15_0_Address;
             int RetryConunt = 0;
             int nowPage = 0;
             while (true)
